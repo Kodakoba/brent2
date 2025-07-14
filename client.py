@@ -2,21 +2,37 @@ import numbers
 import discord
 import os
 import re
+import mysql.connector
 from dotenv import load_dotenv
 load_dotenv()
 
 token = str(os.getenv("TOKEN"))
 build_type = str(os.getenv("BUILD_TYPE"))
 bot_version = str(os.getenv("BOT_VERSION"))
-bl_path = str(os.getenv("CH_BL_FILE_PATH"))
-wl_path = str(os.getenv("CH_WL_FILE_PATH"))
+db_host = str(os.getenv("DB_HOST"))
+db_usr = str(os.getenv("DB_USER"))
+db_pwd = str(os.getenv("DB_PASSWORD"))
+db_name = str(os.getenv("DB_NAME"))
 intents = discord.Intents.default()
 intents.message_content = True
 bot = discord.Bot(command_prefix ="&" , intents=intents)
+mydb = mysql.connector.connect(
+    host=db_host,
+    user=db_usr,
+    password=db_pwd,
+    database=db_name
+)
+mycursor = mydb.cursor()
+mycursor.execute("SHOW TABLES")
+for x in mycursor:
+    print(x)
+print(mydb) #test function, move to on_ready()
 
 @bot.event
 async def on_ready():
     print(f"{bot.user} is online in {build_type} with version {bot_version}!")
+
+
 
 @bot.event
 async def on_message(message):

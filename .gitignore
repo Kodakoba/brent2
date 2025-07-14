@@ -4,3 +4,4 @@
 /.idea
 .coverage
 *.db
+*.mwb
